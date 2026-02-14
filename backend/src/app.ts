@@ -4,7 +4,12 @@ import apiRoutes from './routes/api.routes';
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: [
+        "http://direcional.simulador:5173"
+    ]
+}))
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
