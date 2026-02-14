@@ -1,9 +1,13 @@
-import { Sliders, Calendar, Banknote, CheckCircle2, PiggyBank, Landmark, ReceiptText, Share2, Printer } from 'lucide-react';
+import { Sliders, Calendar, Banknote, CheckCircle2, PiggyBank, Landmark, ReceiptText, Share2, Save } from 'lucide-react';
+import { useState } from 'react';
 import { useSimulation } from '../useSimulation';
 import { InputMoney } from './InputMoney';
+import { generateSimulationPDF } from '../utils/pdfGenerator';
+import { ShareSimulationDialog } from './ShareSimulationDialog';
 
 export function SimulationForm() {
     const { data, handleChange } = useSimulation();
+    const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
     const totalEconomizado = (data.doacao_terreno || 0) + (data.cheque_morar_bem || 0) + (data.mcmv_desconto_simu || 0);
 
@@ -127,7 +131,7 @@ export function SimulationForm() {
             </div>
 
             {/* Right Column: Resultados */}
-            <div className="lg:col-span-8 space-y-6">
+            <div id="resultado-simulacao" className="lg:col-span-8 space-y-6 bg-slate-50 lg:bg-transparent p-4 lg:p-0 rounded-2xl">
 
                 {/* 1. Main Gradient Card */}
                 <section className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-3xl p-8 text-white shadow-xl shadow-blue-500/20 relative overflow-hidden">
@@ -331,7 +335,7 @@ export function SimulationForm() {
                     </div>
                     <div className="grid grid-cols-2 gap-8">
                         <div className="flex flex-col">
-                            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Sinal de Compra</span>
+                            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Entrada</span>
                             <InputMoney
                                 id="res_sinal_compra"
                                 label=""
@@ -343,7 +347,7 @@ export function SimulationForm() {
                             />
                         </div>
                         <div className="flex flex-col border-l border-slate-200 pl-8">
-                            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Documentos Cartório (ITBI + Registro)</span>
+                            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Documentos Cartório (Registro)</span>
                             <InputMoney
                                 id="res_docs_cartorio"
                                 label=""
@@ -358,17 +362,30 @@ export function SimulationForm() {
                 </div>
 
                 {/* Buttons */}
-                <div className="flex gap-4 pt-4">
-                    <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+                <div className="flex gap-4 pt-4 no-print">
+                    <button
+                        onClick={() => setShareDialogOpen(true)}
+                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                    >
                         <Share2 className="w-5 h-5" />
                         Compartilhar Simulação
                     </button>
-                    <button className="flex-1 bg-white border border-slate-200 hover:bg-slate-50 text-slate-900 font-bold py-4 rounded-xl shadow-sm transition-all active:scale-[0.98] flex items-center justify-center gap-2">
-                        <Printer className="w-5 h-5" />
-                        Imprimir Relatório
+                    <button
+                        onClick={() => generateSimulationPDF('resultado-simulacao')}
+                        className="flex-1 bg-white border border-slate-200 hover:bg-slate-50 text-slate-900 font-bold py-4 rounded-xl shadow-sm transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                    >
+                        <Save className="w-5 h-5" />
+                        Salvar Simulação
                     </button>
                 </div>
             </div>
+
+            {/* Share Dialog */}
+            <ShareSimulationDialog
+                open={shareDialogOpen}
+                onOpenChange={setShareDialogOpen}
+                simulationData={data}
+            />
         </div>
     );
 }

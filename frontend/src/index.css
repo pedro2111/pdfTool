@@ -32,6 +32,35 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 
+  --color-blue-50: hsl(210 100% 96%);
+  --color-blue-100: hsl(210 100% 90%);
+  --color-blue-500: hsl(217 91% 60%);
+  --color-blue-600: hsl(221 83% 53%);
+  --color-blue-700: hsl(224 76% 48%);
+
+  --color-slate-50: hsl(210 40% 98%);
+  --color-slate-100: hsl(210 40% 96%);
+  --color-slate-200: hsl(214 32% 91%);
+  --color-slate-300: hsl(213 27% 84%);
+  --color-slate-400: hsl(215 20% 65%);
+  --color-slate-500: hsl(215 16% 47%);
+  --color-slate-600: hsl(215 19% 35%);
+  --color-slate-700: hsl(215 25% 27%);
+  --color-slate-800: hsl(217 33% 17%);
+  --color-slate-900: hsl(222 47% 11%);
+
+  --color-amber-100: hsl(48 100% 92%);
+  --color-amber-200: hsl(48 97% 85%);
+  --color-amber-600: hsl(38 92% 50%);
+  --color-amber-800: hsl(31 75% 35%);
+
+  --color-emerald-100: hsl(149 80% 90%);
+  --color-emerald-300: hsl(150 77% 66%);
+  --color-emerald-400: hsl(150 70% 55%);
+  --color-emerald-500: hsl(150 71% 43%);
+  --color-emerald-600: hsl(152 72% 34%);
+  --color-emerald-700: hsl(153 67% 28%);
+
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
@@ -39,6 +68,7 @@
     from {
       height: 0;
     }
+
     to {
       height: var(--radix-accordion-content-height);
     }
@@ -48,6 +78,7 @@
     from {
       height: var(--radix-accordion-content-height);
     }
+
     to {
       height: 0;
     }
@@ -57,10 +88,12 @@
 @utility container {
   margin-inline: auto;
   padding-inline: 2rem;
-  @media (width >= --theme(--breakpoint-sm)) {
+
+  @media (width >=--theme(--breakpoint-sm)) {
     max-width: none;
   }
-  @media (width >= 1400px) {
+
+  @media (width >=1400px) {
     max-width: 1400px;
   }
 }
@@ -74,6 +107,7 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+
   *,
   ::after,
   ::before,
@@ -90,67 +124,68 @@
 
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
- 
+
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
- 
+
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
- 
+
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
- 
+
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
- 
+
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
- 
+
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
- 
+
     --radius: 0.5rem;
   }
- 
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
- 
+
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
- 
+
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
- 
+
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
- 
+
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
- 
+
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
- 
+
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
- 
+
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
- 
+
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
   }
 }
- 
+
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
