@@ -1,0 +1,18 @@
+[
+    {
+        "title": "Apresentação",
+        "content": "Bem-vindo ao sistema de simulação. Esta ferramenta foi desenvolvida para auxiliar no processo de atendimento e simulação de financiamento habitacional, seguindo rigorosamente as regras estabelecidas."
+    },
+    {
+        "title": "Documentação Necessária",
+        "content": "Para realizar a simulação, certifique-se de ter em mãos: Valor do imóvel, renda bruta familiar, data de nascimento do comprador mais velho, e informações sobre FGTS."
+    },
+    {
+        "title": "Regras de Financiamento",
+        "content": "O financiamento segue as normas do SFH (Sistema Financeiro da Habitação). O valor da entrada e das parcelas pode variar de acordo com a análise de crédito."
+    },
+    {
+        "title": "Fluxo de Atendimento",
+        "content": "1. Realize a simulação. 2. Gere a ficha de atendimento. 3. Encaminhe para análise de crédito. 4. Aguarde o retorno da instituição financeira."
+    }
+]

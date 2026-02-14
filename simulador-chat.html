@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Simulação de Financiamento - Desktop</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#2563eb",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f172a"
+                    },
+                    fontFamily: { display: ["Inter", "sans-serif"] },
+                    borderRadius: { DEFAULT: "12px" }
+                }
+            }
+        };
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+
+    <!-- ================== SEU HTML ORIGINAL ================== -->
+    <!-- SOMENTE IDS FORAM ADICIONADOS -->
+
+    <input id="valor_apartamento" type="hidden" value="225.000,00" />
+    <input id="doacao_terreno" type="hidden" value="30.500,00" />
+    <input id="cheque_morar_bem" type="hidden" value="16.079,27" />
+    <input id="valor_financiado" type="hidden" value="97.881,88" />
+
+    <span id="desconto_caixa" style="display:none;">23.871,00</span>
+
+    <span id="parcela_apartamento" style="display:none;">764,08</span>
+    <span id="entrada_apos_desconto" style="display:none;">0,00</span>
+    <span id="entrada_sem_desc" style="display:none;">46.579,27</span>
+    <span id="valor_final_desc" style="display:none;">154.549,73</span>
+
+    <!-- ================== SCRIPT ADICIONADO ================== -->
+
+    <script>
+
+        function parseBR(v) {
+            if (!v) return 0;
+            return Number(v.replace(/\./g, '').replace(',', '.')) || 0;
+        }
+
+        function formatBR(v) {
+            return v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function calc() {
+
+            const prev = {
+                valor_apartamento: parseBR(document.getElementById('valor_apartamento')?.value),
+                doacao_terreno: parseBR(document.getElementById('doacao_terreno')?.value),
+                cheque_morar_bem: parseBR(document.getElementById('cheque_morar_bem')?.value),
+                desconto_caixa: parseBR(document.getElementById('desconto_caixa')?.innerText),
+                valor_financiado: parseBR(document.getElementById('valor_financiado')?.value),
+                valor_parcela: parseBR(document.getElementById('parcela_apartamento')?.innerText)
+            };
+
+            const mcmv_desconto_simu = prev.desconto_caixa || 0;
+
+            const valor_entrada =
+                (prev.doacao_terreno || 0)
+                + (prev.cheque_morar_bem || 0);
+
+            const valor_apartamento_com_descontos_codahb =
+                (prev.valor_apartamento || 0)
+                - (prev.doacao_terreno || 0)
+                - (prev.cheque_morar_bem || 0)
+                - mcmv_desconto_simu;
+
+            const valor_financiamento = prev.valor_financiado || 0;
+
+            const entrada_sem_os_descontos = valor_entrada;
+
+            const entrada_apos_desconto =
+                entrada_sem_os_descontos
+                - (prev.doacao_terreno || 0)
+                - (prev.cheque_morar_bem || 0);
+
+            const parcela_apartamento = prev.valor_parcela || 0;
+
+            document.getElementById('entrada_sem_desc').innerText = formatBR(entrada_sem_os_descontos);
+            document.getElementById('entrada_apos_desconto').innerText = formatBR(entrada_apos_desconto);
+            document.getElementById('valor_final_desc').innerText = formatBR(valor_apartamento_com_descontos_codahb);
+            document.getElementById('parcela_apartamento').innerText = formatBR(parcela_apartamento);
+
+        }
+
+        window.addEventListener('load', calc);
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Simulação de Financiamento - Desktop</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#2563eb",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f172a",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "12px",
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+    <header
+        class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <button class="p-2 -ml-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    <span class="material-icons-outlined text-slate-600 dark:text-slate-400">arrow_back</span>
+                </button>
+                <div class="flex items-center gap-2">
+                    <div class="bg-blue-600 p-2 rounded-lg">
+                        <span class="material-icons-outlined text-white text-lg">home_work</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Simulador
+                            Imobiliário</h1>
+                        <p class="text-xs text-slate-500 font-medium uppercase tracking-wide">Plano Minha Casa Minha
+                            Vida</p>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center gap-4">
+                <div class="text-right">
+                    <p class="text-sm font-medium text-slate-900 dark:text-slate-200">João Silva</p>
+                    <p class="text-xs text-slate-500">Corretor Associado</p>
+                </div>
+                <div
+                    class="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-bold">
+                    JS
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div class="lg:col-span-4 space-y-6">
+                <div
+                    class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden sticky top-24">
+                    <div class="p-6 border-b border-slate-100 dark:border-slate-700">
+                        <div class="flex items-center gap-3 mb-1">
+                            <div
+                                class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center">
+                                <span class="material-icons-outlined text-primary text-sm">tune</span>
+                            </div>
+                            <h2 class="text-lg font-bold text-slate-800 dark:text-slate-200">Parâmetros</h2>
+                        </div>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 ml-11">Ajuste os valores da simulação</p>
+                    </div>
+                    <div class="p-6 space-y-6">
+                        <div class="space-y-2">
+                            <label
+                                class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide flex items-center gap-2">
+                                <span class="material-icons-outlined text-sm">apartment</span>
+                                Valor do Apartamento
+                            </label>
+                            <div class="relative group">
+                                <span
+                                    class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium text-sm transition-colors group-focus-within:text-primary">R$</span>
+                                <input
+                                    class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-base font-semibold transition-all"
+                                    type="text" value="225.000,00" />
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label
+                                class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide flex items-center gap-2">
+                                <span class="material-icons-outlined text-sm">landscape</span>
+                                Doação de Terreno
+                            </label>
+                            <div class="relative group">
+                                <span
+                                    class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium text-sm transition-colors group-focus-within:text-emerald-500">R$</span>
+                                <input
+                                    class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-sm font-medium transition-all"
+                                    type="text" value="30.500,00" />
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label
+                                class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide flex items-center gap-2">
+                                <span class="material-icons-outlined text-sm">card_giftcard</span>
+                                Morar Bem
+                            </label>
+                            <div class="relative group">
+                                <span
+                                    class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium text-sm transition-colors group-focus-within:text-emerald-500">R$</span>
+                                <input
+                                    class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-sm font-medium transition-all"
+                                    type="text" value="16.079,27" />
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label
+                                class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide flex items-center gap-2">
+                                <span class="material-icons-outlined text-sm">account_balance</span>
+                                Valor Financiado
+                            </label>
+                            <div class="relative group">
+                                <span
+                                    class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium text-sm transition-colors group-focus-within:text-primary">R$</span>
+                                <input
+                                    class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium transition-all"
+                                    type="text" value="97.881,88" />
+                            </div>
+                        </div>
+                        <button
+                            class="w-full mt-4 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 font-bold py-3.5 rounded-xl shadow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-sm">
+                            <span class="material-icons-outlined text-lg">refresh</span>
+                            Recalcular
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="lg:col-span-8 space-y-6">
+                <section
+                    class="bg-gradient-to-br from-primary to-blue-700 rounded-3xl p-8 text-white shadow-xl shadow-blue-500/20 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+                    <div class="absolute bottom-0 left-0 -ml-16 -mb-16 w-48 h-48 bg-blue-400/20 rounded-full blur-3xl">
+                    </div>
+                    <div class="relative z-10 grid md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="bg-blue-500/30 p-1.5 rounded-lg backdrop-blur-sm">
+                                    <span class="material-icons-outlined text-blue-100 text-sm">calendar_today</span>
+                                </span>
+                                <p class="text-blue-100 text-sm font-semibold uppercase tracking-wider">Parcela Mensal
+                                </p>
+                            </div>
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-3xl font-medium opacity-80">R$</span>
+                                <span class="text-6xl font-bold tracking-tight">764,08</span>
+                            </div>
+                            <p class="text-blue-200 text-sm mt-2 font-medium">Primeira parcela do financiamento</p>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/10">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="bg-white/20 p-1.5 rounded-lg">
+                                    <span class="material-icons-outlined text-white text-sm">payments</span>
+                                </span>
+                                <p class="text-blue-100 text-xs font-bold uppercase tracking-wider">Entrada Necessária
+                                </p>
+                            </div>
+                            <div class="flex items-baseline gap-1 mb-1">
+                                <span class="text-xl font-medium opacity-80">R$</span>
+                                <span class="text-4xl font-bold">0,00</span>
+                            </div>
+                            <div class="h-1 w-full bg-white/20 rounded-full mt-3 overflow-hidden">
+                                <div class="h-full bg-emerald-400 w-full rounded-full"></div>
+                            </div>
+                            <p class="text-emerald-300 text-xs font-bold mt-2 flex items-center gap-1">
+                                <span class="material-icons-outlined text-sm">check_circle</span>
+                                Entrada totalmente subsidiada
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div
+                        class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100 dark:border-slate-700">
+                            <div
+                                class="bg-emerald-100 dark:bg-emerald-900/30 p-2 rounded-lg text-emerald-600 dark:text-emerald-400">
+                                <span class="material-icons-outlined">savings</span>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800 dark:text-slate-200">Subsídios e Descontos</h3>
+                                <p class="text-xs text-slate-500">Benefícios aplicados</p>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center group">
+                                <span
+                                    class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-emerald-600 transition-colors">Doação
+                                    de Terreno</span>
+                                <span
+                                    class="text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded">R$
+                                    30.500,00</span>
+                            </div>
+                            <div class="flex justify-between items-center group">
+                                <span
+                                    class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-emerald-600 transition-colors">Cheque
+                                    Morar Bem</span>
+                                <span
+                                    class="text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded">R$
+                                    16.079,27</span>
+                            </div>
+                            <div class="flex justify-between items-center group">
+                                <span
+                                    class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-emerald-600 transition-colors">Desconto
+                                    MCMV</span>
+                                <span
+                                    class="text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded">R$
+                                    23.871,00</span>
+                            </div>
+                            <div
+                                class="pt-3 border-t border-dashed border-slate-200 dark:border-slate-700 flex justify-between items-center">
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Total
+                                    Economizado</span>
+                                <span class="text-base font-bold text-emerald-700 dark:text-emerald-300">R$
+                                    70.450,27</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100 dark:border-slate-700">
+                            <div class="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg text-primary">
+                                <span class="material-icons-outlined">account_balance</span>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800 dark:text-slate-200">Composição Financeira</h3>
+                                <p class="text-xs text-slate-500">Detalhes do contrato</p>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-slate-600 dark:text-slate-400">Valor do Imóvel</span>
+                                <span class="text-sm font-medium text-slate-900 dark:text-slate-200">R$
+                                    225.000,00</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-slate-600 dark:text-slate-400">Valor Financiado</span>
+                                <span class="text-sm font-medium text-slate-900 dark:text-slate-200">R$ 97.881,88</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-slate-600 dark:text-slate-400">Entrada (Sem Descontos)</span>
+                                <span class="text-sm font-medium text-slate-900 dark:text-slate-200">R$ 46.579,27</span>
+                            </div>
+                            <div
+                                class="pt-3 mt-1 bg-slate-50 dark:bg-slate-700/50 -mx-6 px-6 pb-2 border-t border-slate-100 dark:border-slate-700">
+                                <div class="flex justify-between items-center pt-2">
+                                    <span class="text-sm font-bold text-slate-800 dark:text-slate-200">Valor Final com
+                                        Descontos</span>
+                                    <span class="text-lg font-bold text-primary">R$ 154.549,73</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-amber-100 dark:bg-amber-900/30 p-2 rounded-lg text-amber-600">
+                                <span class="material-icons-outlined">receipt_long</span>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800 dark:text-slate-200">Custos Pós-Aprovação</h3>
+                                <p class="text-xs text-slate-500">Estimativa de despesas cartoriais e taxas</p>
+                            </div>
+                        </div>
+                        <span
+                            class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded border border-amber-200 dark:bg-amber-900/40 dark:text-amber-300 dark:border-amber-800">Importante</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-8">
+                        <div class="flex flex-col">
+                            <span
+                                class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1">Sinal
+                                de Compra</span>
+                            <span class="text-lg font-bold text-slate-800 dark:text-slate-200">R$ 1.000,00</span>
+                        </div>
+                        <div class="flex flex-col border-l border-slate-200 dark:border-slate-700 pl-8">
+                            <span
+                                class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1">Documentos
+                                Cartório (ITBI + Registro)</span>
+                            <span class="text-lg font-bold text-slate-800 dark:text-slate-200">R$ 2.593,26</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-4 pt-4">
+                    <button
+                        class="flex-1 bg-primary hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+                        <span class="material-icons-outlined">share</span>
+                        Compartilhar Simulação
+                    </button>
+                    <button
+                        class="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold py-4 rounded-xl shadow-sm transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+                        <span class="material-icons-outlined">print</span>
+                        Imprimir Relatório
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+
+</html>
