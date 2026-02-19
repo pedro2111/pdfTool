@@ -11,6 +11,8 @@ interface FileProcessInfo {
     isReadable: boolean;
     isIdentified: boolean;
     matchedRule?: string;
+    warning?: string;
+    source?: string;
 }
 
 interface ChecklistResult {
@@ -150,6 +152,15 @@ export function ChecklistPage() {
                                             </span>
                                         )}
                                     </div>
+
+                                    {file.warning && (
+                                        <div className="flex items-start gap-1 p-2 bg-amber-50 rounded border border-amber-100 mt-1">
+                                            <AlertCircle className="w-3 h-3 text-amber-500 mt-0.5 shrink-0" />
+                                            <p className="text-[10px] text-amber-700 italic leading-tight">
+                                                {file.warning}
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>

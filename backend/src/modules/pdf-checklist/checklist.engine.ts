@@ -45,10 +45,21 @@ export class ChecklistEngine {
                     }
                 }
 
+                let identifiedByFallback = false;
                 if (!isReadable) {
                     unreadableFiles.push(extraction.filename);
                 } else if (!matchedLabel) {
-                    unclassifiedFiles.push(extraction.filename);
+                    // Fallback Inteligente pelo Nome do Arquivo
+                    const fallbackMatch = this.detectByFilenameFallback(extraction.filename, cleanText);
+                    if (fallbackMatch) {
+                        matchedLabel = fallbackMatch.label;
+                        identifiedByFallback = true;
+                        if (!received.includes(fallbackMatch.label)) {
+                            received.push(fallbackMatch.label);
+                        }
+                    } else {
+                        unclassifiedFiles.push(extraction.filename);
+                    }
                 }
 
                 filesDetail.push({
@@ -57,7 +68,11 @@ export class ChecklistEngine {
                     textLength: cleanText.length,
                     isReadable: isReadable,
                     isIdentified: !!matchedLabel,
-                    matchedRule: matchedLabel || undefined
+                    matchedRule: matchedLabel || undefined,
+                    source: identifiedByFallback ? 'filename_fallback' : undefined,
+                    warning: identifiedByFallback
+                        ? 'Documento identificado pelo nome do arquivo. OCR não reconheceu o tipo.'
+                        : undefined
                 });
             }
 
@@ -140,6 +155,43 @@ export class ChecklistEngine {
         }
 
         return matchCount >= (rule.minMatches || 1);
+    }
+    /**
+     * Fallback por nome de arquivo quando o OCR falha
+     */
+    private detectByFilenameFallback(filename: string, cleanOcrText: string): { type: string, label: string } | null {
+        const cleanFilename = normalizeText(filename);
+
+        for (const [key, rule] of Object.entries(this.rules)) {
+            let matchesInFilename = 0;
+            const keywordsInFilename: string[] = [];
+
+            // Verifica keywords no nome do arquivo
+            for (const keyword of rule.keywords) {
+                const normalizedKeyword = normalizeText(keyword);
+                if (cleanFilename.includes(normalizedKeyword)) {
+                    matchesInFilename++;
+                    keywordsInFilename.push(normalizedKeyword);
+                }
+            }
+
+            // Regra 1: Pelo menos 2 palavras-chave diferentes no nome
+            if (matchesInFilename >= 2) {
+                return { type: key, label: rule.label };
+            }
+
+            // Regra 2: 1 keyword no nome + pelo menos 1 match fraco no OCR
+            if (matchesInFilename >= 1) {
+                for (const keyword of rule.keywords) {
+                    const normalizedKeyword = normalizeText(keyword);
+                    if (cleanOcrText.includes(normalizedKeyword)) {
+                        return { type: key, label: rule.label };
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 }
 

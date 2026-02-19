@@ -10,6 +10,7 @@ export function normalizeText(text: string): string {
         .toUpperCase()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+        .replace(/[^A-Z0-9\s]/g, ' ') // Remove caracteres especiais (substitui por espaço)
         .replace(/\s+/g, ' ') // Remove espaços duplicados
         .replace(/\n+/g, ' ') // Remove quebras de linha
         .trim();

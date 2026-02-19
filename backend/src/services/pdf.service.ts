@@ -22,8 +22,9 @@ export class PdfService {
         for (const file of files) {
             console.log(`[PdfService] Processando imagem para conversão: ${file.originalname}`);
 
-            // 1. Aplicar o OCR em cada imagem
-            const extractedText = await ocrService.runOCRFromImage(file.buffer);
+            // 1. Aplicar o OCR em cada imagem (com pré-processamento para melhor eficácia)
+            const preprocessedBuffer = await this.preprocessImageForOCR(file.buffer);
+            const extractedText = await ocrService.runOCRFromImage(preprocessedBuffer);
             fileExtractions.push({
                 filename: file.originalname,
                 type: file.mimetype,
@@ -111,6 +112,20 @@ export class PdfService {
     }
 
     /**
+     * Prepara a imagem para o OCR aplicando filtros do Sharp.
+     */
+    private async preprocessImageForOCR(imageBuffer: Buffer): Promise<Buffer> {
+        console.log('[PdfService] Aplicando pré-processamento de imagem para OCR (Sharp)...');
+        return sharp(imageBuffer)
+            .resize({ width: 1500 })        // aumenta DPI proporcionalmente
+            .grayscale()                    // remove cor
+            .normalize()                    // melhora contraste
+            .sharpen()                      // melhora nitidez
+            .threshold(180)                 // binariza (preto e branco puro)
+            .toBuffer();
+    }
+
+    /**
      * Mescla múltiplos arquivos, realizando OCR/Extração ANTES de qualquer conversão.
      */
     async mergePdfs(files: Express.Multer.File[]): Promise<{ pdfBuffer: Buffer; checklist: ChecklistResult }> {
@@ -122,11 +137,18 @@ export class PdfService {
             console.log(`[PdfService] Iniciando processamento de: ${file.originalname}`);
 
             // 1. OCR/Extração no arquivo ORIGINAL
-            const extractedText = await ocrService.processFile(file);
+            let textToProcess = '';
+            if (file.mimetype.startsWith('image/')) {
+                const preprocessedBuffer = await this.preprocessImageForOCR(file.buffer);
+                textToProcess = await ocrService.runOCRFromImage(preprocessedBuffer);
+            } else {
+                textToProcess = await ocrService.processFile(file);
+            }
+
             fileExtractions.push({
                 filename: file.originalname,
                 type: file.mimetype,
-                text: extractedText
+                text: textToProcess
             });
 
             // 2. Preparação dos buffers
