@@ -1,11 +1,64 @@
 import sharp from 'sharp';
 import { PDFDocument, PDFImage } from 'pdf-lib';
+import { checklistEngine } from '../modules/pdf-checklist/checklist.engine';
+import { ocrService } from '../modules/pdf-checklist/ocr.service';
+import { ChecklistResult } from '../modules/pdf-checklist/types';
 
 export class PdfService {
     /**
-     * Converts a single image buffer to a PDF buffer with compression.
+     * Converts an array of image files to a single PDF buffer with OCR and Checklist.
+     * Order:
+     * 1. Apply OCR to each image
+     * 2. Apply existing compression
+     * 3. Convert each image to PDF
+     * 4. Merge all PDFs
+     * 5. Apply checklist
      */
-    async convertImageToPdf(imageBuffer: Buffer): Promise<Buffer> {
+    async convertImageToPdf(files: Express.Multer.File[]): Promise<{ pdfBuffer: Buffer; checklist: ChecklistResult }> {
+        const pdfDoc = await PDFDocument.create();
+        const fileExtractions: { filename: string, type: string, text: string }[] = [];
+        const pdfBuffers: Buffer[] = [];
+
+        for (const file of files) {
+            console.log(`[PdfService] Processando imagem para conversão: ${file.originalname}`);
+
+            // 1. Aplicar o OCR em cada imagem
+            const extractedText = await ocrService.runOCRFromImage(file.buffer);
+            fileExtractions.push({
+                filename: file.originalname,
+                type: file.mimetype,
+                text: extractedText
+            });
+
+            // 2 & 3. Realizar a compressão e transformar em pdf cada imagem (usando helper)
+            const pdfBuffer = await this.compressAndConvertSingleImage(file.buffer);
+            pdfBuffers.push(pdfBuffer);
+        }
+
+        // 4. Realizar o merge
+        for (const buffer of pdfBuffers) {
+            const pdf = await PDFDocument.load(buffer);
+            const copiedPages = await pdfDoc.copyPages(pdf, pdf.getPageIndices());
+            copiedPages.forEach((page) => pdfDoc.addPage(page));
+        }
+
+        const pdfBytes = await pdfDoc.save({ useObjectStreams: true });
+        const finalPdfBuffer = Buffer.from(pdfBytes);
+
+        // 5. Aplicar o checklist
+        const checklist = await checklistEngine.generateChecklist(fileExtractions);
+
+        return {
+            pdfBuffer: finalPdfBuffer,
+            checklist
+        };
+    }
+
+    /**
+     * Internal helper to convert a single image buffer to a PDF buffer with compression.
+     * (Reuses the original logic)
+     */
+    private async compressAndConvertSingleImage(imageBuffer: Buffer): Promise<Buffer> {
         let image = sharp(imageBuffer);
         const metadata = await image.metadata();
 
@@ -13,8 +66,6 @@ export class PdfService {
             throw new Error('Invalid image metadata');
         }
 
-        // Resize if too large to reduce file size (max width/height 2000px)
-        // detailed documents usually don't need more than 2000px width (approx 200-300 DPI for A4)
         const MAX_DIMENSION = 2000;
         if (metadata.width > MAX_DIMENSION || metadata.height > MAX_DIMENSION) {
             image = image.resize({
@@ -25,9 +76,8 @@ export class PdfService {
             });
         }
 
-        // Update metadata after resize
         const resizedBuffer = await image.toBuffer();
-        image = sharp(resizedBuffer); // Reload to get new metadata
+        image = sharp(resizedBuffer);
         const newMetadata = await image.metadata();
 
         const width = newMetadata.width || metadata.width;
@@ -37,15 +87,12 @@ export class PdfService {
         const page = pdfDoc.addPage([width, height]);
 
         let uniqueImage;
-
         if (newMetadata.hasAlpha) {
-            // PNG compression
             const pngBuffer = await image
                 .png({ compressionLevel: 9, adaptiveFiltering: true, force: true })
                 .toBuffer();
             uniqueImage = await pdfDoc.embedPng(pngBuffer);
         } else {
-            // JPEG compression (quality 80 provides good balance)
             const jpegBuffer = await image
                 .jpeg({ quality: 80, force: true })
                 .toBuffer();
@@ -59,46 +106,62 @@ export class PdfService {
             height: height,
         });
 
-        // Save with object streams to reduce size
         const pdfBytes = await pdfDoc.save({ useObjectStreams: true });
         return Buffer.from(pdfBytes);
     }
 
     /**
-     * Merges multiple PDF buffers into a single PDF buffer.
+     * Mescla múltiplos arquivos, realizando OCR/Extração ANTES de qualquer conversão.
      */
-    async mergePdfs(pdfBuffers: Buffer[]): Promise<Buffer> {
+    async mergePdfs(files: Express.Multer.File[]): Promise<{ pdfBuffer: Buffer; checklist: ChecklistResult }> {
         const mergedPdf = await PDFDocument.create();
-
-        for (const pdfBuffer of pdfBuffers) {
-            const pdf = await PDFDocument.load(pdfBuffer);
-            const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-            copiedPages.forEach((page) => mergedPdf.addPage(page));
-        }
-
-        // Save with object streams to reduce size
-        const pdfBytes = await mergedPdf.save({ useObjectStreams: true });
-        return Buffer.from(pdfBytes);
-    }
-
-    /**
-     * Processes a list of files (mixed images and PDFs).
-     * Images are converted to PDF first.
-     * Then all PDFs are merged into one.
-     */
-    async convertAndMerge(files: Express.Multer.File[]): Promise<Buffer> {
+        const fileExtractions: { filename: string, type: string, text: string }[] = [];
         const pdfBuffers: Buffer[] = [];
 
         for (const file of files) {
+            console.log(`[PdfService] Iniciando processamento de: ${file.originalname}`);
+
+            // 1. OCR/Extração no arquivo ORIGINAL
+            const extractedText = await ocrService.processFile(file);
+            fileExtractions.push({
+                filename: file.originalname,
+                type: file.mimetype,
+                text: extractedText
+            });
+
+            // 2. Preparação dos buffers
             if (file.mimetype === 'application/pdf') {
                 pdfBuffers.push(file.buffer);
             } else if (file.mimetype.startsWith('image/')) {
-                const pdfBuffer = await this.convertImageToPdf(file.buffer);
+                const pdfBuffer = await this.compressAndConvertSingleImage(file.buffer);
                 pdfBuffers.push(pdfBuffer);
             }
         }
 
-        return this.mergePdfs(pdfBuffers);
+        // 3. Mesclagem
+        for (const buffer of pdfBuffers) {
+            const pdf = await PDFDocument.load(buffer);
+            const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+            copiedPages.forEach((page) => mergedPdf.addPage(page));
+        }
+
+        const pdfBytes = await mergedPdf.save({ useObjectStreams: true });
+        const finalPdfBuffer = Buffer.from(pdfBytes);
+
+        // 4. Geração do checklist
+        const checklist = await checklistEngine.generateChecklist(fileExtractions);
+
+        return {
+            pdfBuffer: finalPdfBuffer,
+            checklist
+        };
+    }
+
+    /**
+     * Agora o convertAndMerge apenas delega para o mergePdfs, que já cuida de tudo.
+     */
+    async convertAndMerge(files: Express.Multer.File[]): Promise<{ pdfBuffer: Buffer; checklist: ChecklistResult }> {
+        return this.mergePdfs(files);
     }
 }
 

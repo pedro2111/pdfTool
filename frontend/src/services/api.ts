@@ -7,7 +7,7 @@ export const api = {
         const formData = new FormData();
         formData.append('files', file);
         return axios.post(`${API_URL}/convert-images`, formData, {
-            responseType: 'blob',
+            responseType: 'json',
             headers: { 'Content-Type': 'multipart/form-data' }
         });
     },
@@ -16,7 +16,7 @@ export const api = {
         const formData = new FormData();
         files.forEach(file => formData.append('files', file));
         return axios.post(`${API_URL}/convert-images`, formData, {
-            responseType: 'blob',
+            responseType: 'json',
             headers: { 'Content-Type': 'multipart/form-data' }
         });
     },
@@ -25,7 +25,7 @@ export const api = {
         const formData = new FormData();
         files.forEach(file => formData.append('files', file));
         return axios.post(`${API_URL}/merge-pdfs`, formData, {
-            responseType: 'blob',
+            responseType: 'json',
             headers: { 'Content-Type': 'multipart/form-data' }
         });
     },
@@ -34,7 +34,7 @@ export const api = {
         const formData = new FormData();
         files.forEach(file => formData.append('files', file));
         return axios.post(`${API_URL}/convert-and-merge`, formData, {
-            responseType: 'blob',
+            responseType: 'json',
             headers: { 'Content-Type': 'multipart/form-data' }
         });
     }

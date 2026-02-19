@@ -77,9 +77,9 @@ export const UploadDropzone = () => {
                 onChange={onFileInput}
             />
             <UploadCloud className="h-12 w-12 text-slate-400 mb-4" />
-            <h3 className="text-lg font-semibold text-slate-700">Drag & Drop files here</h3>
-            <p className="text-sm text-slate-500 mt-2">or click to select files</p>
-            <p className="text-xs text-slate-400 mt-4">Supported: PDF, JPG, PNG, WEBP</p>
+            <h3 className="text-lg font-semibold text-slate-700">Arraste e solte arquivos aqui!</h3>
+            <p className="text-sm text-slate-500 mt-2">Ou clique para selecionar arquivos</p>
+            <p className="text-xs text-slate-400 mt-4">Suportado: PDF, JPG, PNG, WEBP</p>
         </div>
     );
 };

@@ -1,0 +1,82 @@
+{
+  "cnh": {
+    "label": "CNH do titular",
+    "keywords": [
+      "CARTEIRA NACIONAL DE HABILITACAO"
+    ],
+    "minMatches": 1
+  },
+  "extrato_fgts": {
+    "label": "Extrato FGTS",
+    "keywords": [
+      "FGTS",
+      "PIS",
+      "PASEP",
+      "NIS",
+      "FGTS DIGITAL",
+      "CAIXA"
+    ],
+    "minMatches": 2
+  },
+  "comprovante_residencia": {
+    "label": "Comprovante de residência",
+    "keywords": [
+      "COMPROVANTE DE RESIDENCIA",
+      "VIVO",
+      "CLARO",
+      "TIM",
+      "OI",
+      "TELEFONICA",
+      "NEOENERGIA",
+      "CAESB"
+    ],
+    "minMatches": 1
+  },
+  "certidao_casamento": {
+    "label": "Certidão de casamento",
+    "keywords": [
+      "CERTIDAO DE CASAMENTO"
+    ],
+    "minMatches": 1
+  },
+  "certidao_nascimento": {
+    "label": "Certidão de nascimento",
+    "keywords": [
+      "CERTIDAO DE NASCIMENTO"
+    ],
+    "minMatches": 1
+  },
+  "contracheque": {
+    "label": "3 últimos contracheques",
+    "keywords": [
+      "HOLERITE",
+      "REMUNERACAO",
+      "INSS",
+      "FGTS",
+      "CONTRACHEQUE",
+      "DEMONSTRATIVO DE PAGAMENTO",
+      "RECIBO DE VENCIMENTO",
+      "COMPROVANTE DE RENDIMENTOS"
+    ],
+    "minMatches": 2,
+    "minOccurrences": 3
+  },
+  "ctps": {
+    "label": "Carteira de trabalho (CTPS)",
+    "keywords": [
+      "CARTEIRA DE TRABALHO",
+      "CTPS",
+      "PREVIDENCIA SOCIAL",
+      "MINISTERIO DO TRABALHO",
+      "REPUBLICA FEDERATIVA DO BRASIL",
+      "PIS",
+      "PIS/PASEP",
+      "NIT",
+      "SERIE",
+      "UF",
+      "CONTRATO DE TRABALHO",
+      "CONTRATOS DE TRABALHO"
+    ],
+    "minMatches": 3
+  }
+}

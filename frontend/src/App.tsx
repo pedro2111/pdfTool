@@ -5,6 +5,7 @@ import { Home } from './pages/Home';
 import { PdfConverter } from './pages/PdfConverter';
 import { Guidelines } from './pages/Guidelines';
 import { SimulationPage } from './pages/SimulationPage';
+import { ChecklistPage } from './pages/ChecklistPage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route path="/pdf-tools" element={<PdfConverter />} />
             <Route path="/orientacoes" element={<Guidelines />} />
             <Route path="/simulacao" element={<SimulationPage />} />
+            <Route path="/checklist-result" element={<ChecklistPage />} />
           </Routes>
         </Router>
       </FileProvider>
